@@ -1,0 +1,22 @@
+{
+  "name": "raspi-systeminfo-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nicolai Roovers",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-mung": "^0.5.1",
+    "systeminformation": "^4.34.7"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.7"
+  }
+}
