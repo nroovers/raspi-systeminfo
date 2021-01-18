@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const infoRouter = require('./routers/info')
 const app = express()
 
@@ -11,9 +12,9 @@ const errorHandler = require('./utils/errorHandling/errorHandler')
 // app.use(express.json())
 
 
-// app.use(cors())                      --> middleware to support CORS
-// app.use(express.static('build'))     --> add static folder -> for frontend  
-// app.use(middleware.requestLogger)    --> add logging
+app.use(cors())                      // --> middleware to support CORS
+// app.use(express.static('build'))     // --> add static folder -> for frontend  
+// app.use(middleware.requestLogger)    // --> add logging
 
 
 app.use(transformJson)
