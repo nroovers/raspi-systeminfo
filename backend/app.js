@@ -1,9 +1,10 @@
 const express = require('express')
 const infoRouter = require('./routers/info')
-const transformJsonResp = require('./utils/middleware/transformJson')
 const app = express()
 
 const transformJson = require('./utils/middleware/transformJson')
+const unknownEndpoint = require('./utils/middleware/unknownEndpoint')
+const errorHandler = require('./utils/errorHandling/errorHandler')
 
 
 // parses incoming requests with JSON payloads and is based on body-parser.
@@ -19,8 +20,7 @@ app.use(transformJson)
 
 app.use('/api/info', infoRouter)
 
-
-// app.use(middleware.unknownEndpoint)
-// app.use(middleware.errorHandler)
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 module.exports = app

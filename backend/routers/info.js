@@ -24,6 +24,7 @@ infoRouter.get('/', async (req, res, next) => {
         }
         res.json(data)
     } catch (error) {
+        error.statusCode=400
         return next(error)
     }
 })
