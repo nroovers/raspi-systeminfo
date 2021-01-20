@@ -8,8 +8,12 @@ const cpuSpeed = () => {
     return si.cpuCurrentspeed()
 }
 
-const cpuTemp = () => {
-    return si.cpuTemperature()
+const cpuTemp = async () => {
+    // return si.cpuTemperature()
+    const temp = await si.cpuTemperature()
+    temp.main = Math.round(((Math.random() * 20) + 60) * 10) / 10
+    console.log('temp:', temp)
+    return temp
 }
 
 const mem = () => {
