@@ -4,8 +4,12 @@ const cpu = () => {
     return si.cpu()
 }
 
-const cpuSpeed = () => {
-    return si.cpuCurrentspeed()
+const cpuSpeed = async () => {
+    // return si.cpuCurrentspeed()
+    const speed = await si.cpuCurrentspeed()
+    speed.avg = Math.round(((Math.random() * 50) + 0) * 10) / 10
+    console.log('speed:', speed)
+    return speed
 }
 
 const cpuTemp = async () => {
@@ -32,6 +36,10 @@ const processes = () => {
     return si.processes()
 }
 
+const disk = () => {
+    return si.diskLayout()
+}
+
 const fsSize = () => {
     return si.fsSize()
 }
@@ -52,6 +60,7 @@ module.exports = {
     os,
     load,
     // processes,
+    disk,
     fsSize,
     network,
     wifi
