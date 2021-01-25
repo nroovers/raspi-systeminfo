@@ -3,24 +3,33 @@ import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
 import Chart from "react-google-charts";
 
+
+// TODO Change speeod to load
+
 const CpuInfo = (props) => {
 
     const maxGraphIntervals = 25
     const refreshInterval = 5000;
     // const [refreshInterval, setRefreshInterval] = useState(10000);
-    const [cpuData, setCpuData] = useState({});
-    const [speedData, setSpeedData] = useState([]);
-    const [tempData, setTempData] = useState([]);
+
+    const [info, setInfo] = useState({ cpu: {}, cpuLoad: [], cpuTemp: [] })
 
 
     const fetchMetrics = () => {
         // retrieve and then setData()
-        infoService.getInfo(['cpuTemp', 'cpuSpeed'])
+        console.log('fetchmetrics')
+        infoService.getInfo(['cpuTemp', 'cpuLoad'])
             .then(data => {
+                console.log('metrics fetched')//, data, info.cpuTemp, data.cpuTemp.main)
                 // console.log('->', tempData)
                 // console.log('-->', data, data.cpuTemp.main, tempData.concat(data.cpuTemp.main))
-                setTempData((tempData.length === maxGraphIntervals ? tempData.slice(1) : tempData).concat(data.cpuTemp.main))
-                setSpeedData((speedData.length === maxGraphIntervals ? speedData.slice(1) : speedData).concat(data.cpuSpeed.avg))
+                var updatedInfo = {
+                    cpu: info.cpu,
+                    cpuTemp: (info.cpuTemp.length === maxGraphIntervals ? info.cpuTemp.slice(1) : info.cpuTemp).concat(data.cpuTemp.main),
+                    cpuLoad: (info.cpuLoad.length === maxGraphIntervals ? info.cpuLoad.slice(1) : info.cpuLoad).concat(data.cpuLoad.currentload),
+                }
+                // console.log('updatedInfo', info, updatedInfo)
+                setInfo(updatedInfo)
                 // console.log('--->', tempData)
             })
     }
@@ -29,32 +38,34 @@ const CpuInfo = (props) => {
         var i = 0
         var data = [['x', 'temp']]
         for (i = 0; i < maxGraphIntervals; i++) {
-            data = data.concat([[i, (i < tempData.length ? tempData[tempData.length - i] : 0)]])
+            data = data.concat([[i, (i < info.cpuTemp.length ? info.cpuTemp[info.cpuTemp.length - i] : 0)]])
         }
         return data
     }
 
-    const getSpeedChartData = () => {
+    const getLoadChartData = () => {
         var i = 0
-        var data = [['x', 'speed']]
+        var data = [['x', 'load']]
         for (i = 0; i < maxGraphIntervals; i++) {
-            data = data.concat([[i, (i < speedData.length ? speedData[speedData.length - i] : 0)]])
+            data = data.concat([[i, (i < info.cpuLoad.length ? info.cpuLoad[info.cpuLoad.length - i] : 0)]])
         }
         return data
     }
 
     useEffect(() => {
         console.log('useeffect CPU')
-        if (!cpuData.cpu) {
+        // if (!info.cpu) {
             infoService.getInfo(['cpu'])
                 .then(data => {
-                    console.log('CPU data', data)
-                    setCpuData(data)
+                    console.log('CPU data')//, data)
+                    setInfo({ ...info, cpu: data.cpu })
                 })
-        }
-    }, [cpuData]);
+        // }
+    }, [])
+    // }, [info.cpu]);
 
     useEffect(() => {
+        console.log('useeffect Interval')
         if (refreshInterval && refreshInterval > 0) {
             const interval = setInterval(fetchMetrics, refreshInterval);
             return () => clearInterval(interval);
@@ -65,41 +76,29 @@ const CpuInfo = (props) => {
 
     return (
         <div>
-            {/* <div>Temperature: {props.info?.cpuTemp?.main} </div> */}
-
-            {/* <div>Speed: {props.info?.cpuSpeed?.avg} </div> */}
-
-
-            {/* <div>Temperature: <ul>{tempData.map(temp => {
-                console.log(i)
-                return (<li key={++i}>  {temp}  </li>)
-            })}
-            </ul>
-            </div> */}
-
             <h2>CPU</h2>
 
-            <p>manufacturer: {cpuData.cpu?.manufacturer}</p>
-            <p>brand: {cpuData.cpu?.brand}</p>
-            <p>speed: {cpuData.cpu?.speed} GHz</p>
-            <p>cores: {cpuData.cpu?.cores}</p>
-            <p>Current speed: {speedData.length > 0 ? speedData[speedData.length - 1] : 0} GHz</p>
-            <p>Current temperature: {tempData.length > 0 ? tempData[tempData.length - 1] : 0} C</p>
+            <p>manufacturer: {info.cpu?.manufacturer}</p>
+            <p>brand: {info.cpu?.brand}</p>
+            <p>speed: {info.cpu?.speed} GHz</p>
+            <p>cores: {info.cpu?.cores}</p>
+            <p>Current load: {info.cpuLoad.length > 0 ? (info.cpuLoad[info.cpuLoad.length - 1]).toFixed(2) : 0} %</p>
+            <p>Current temperature: {info.cpuTemp.length > 0 ? info.cpuTemp[info.cpuTemp.length - 1] : 0} C</p>
 
             <Chart
                 width={'500px'}
                 height={'300px'}
                 chartType="LineChart"
                 loader={<div>Loading Chart</div>}
-                data={getSpeedChartData()}
+                data={getLoadChartData()}
                 options={{
                     hAxis: {},
                     vAxis: {
-                        title: 'Speed',
+                        title: 'Load',
                         viewWindow: { min: 0, max: 100 }
                     },
                 }}
-                rootProps={{ 'data-testid': '1' }}
+                // rootProps={{ 'data-testid': '1' }}
             />
 
             <Chart
@@ -123,7 +122,7 @@ const CpuInfo = (props) => {
                         viewWindow: { min: 40, max: 100 }
                     },
                 }}
-                rootProps={{ 'data-testid': '1' }}
+                // rootProps={{ 'data-testid': '1' }}
             />
 
         </div>

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+// import { useState, useEffect } from 'react'
 import './App.css';
 import axios from 'axios'
-import infoService from './services/infoService'
+// import infoService from './services/infoService'
 
 import {
     BrowserRouter as Router,
@@ -22,7 +22,6 @@ function App() {
 
     // const [info, setInfo] = useState('')
 
-
     // const initInfo = async () => { await infoService.getInfo() }
 
     // useEffect(() => {
@@ -31,7 +30,6 @@ function App() {
     //         setInfo(info)
     //     })
     // }, []);
-
 
     // console.log(info)
 

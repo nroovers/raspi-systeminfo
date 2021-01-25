@@ -1,23 +1,24 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
-import Chart from "react-google-charts";
 
 const MemInfo = (props) => {
-    const [memData, setMemData] = useState({});
-    const [diskData, setDiskData] = useState([]);
-    const [fsSizeData, setFsSizeData] = useState([]);
-
+    const [info, setInfo] = useState({ mem: {}, disk: [], fsSize: [] });
 
     useEffect(() => {
         console.log('useeffect Load')
+        let memInfoMounted = true
         infoService.getInfo(['mem', 'disk', 'fsSize'])
             .then(data => {
                 console.log('set data', data)
-                setMemData(data.mem)
-                setDiskData(data.disk)
-                setFsSizeData(data.fsSize)
+                if (memInfoMounted)
+                    setInfo({
+                        mem: data.mem,
+                        disk: data.disk,
+                        fsSize: data.fsSize,
+                    })
             })
+        return () => memInfoMounted = false
     }, []);
 
 
@@ -26,20 +27,32 @@ const MemInfo = (props) => {
     return (
         <div>
             <h2>Memory</h2>
-            <p>Total: {(memData.total / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
-            <p>Used: {(memData.used / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
-            <p>Free: {(memData.free / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
+            <p>Total: {(info.mem.total / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
+            <p>Used: {(info.mem.used / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
+            <p>Free: {(info.mem.free / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
             <h2>Storage</h2>
-            {diskData.map(disk => {
-                return (
-                    <div key={disk.device + disk.name}>
-                        <p>Device: {disk.device}</p>
-                        <p>Name: {disk.name}</p>
-                        <p>Type: {disk.type}</p>
-                        <p>Size: {toGB(disk.size)} GB</p>
-                    </div>
-                )
-            })}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Size (GB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {info.disk.map(disk => {
+                        return (
+                            <tr key={disk.device + disk.name}>
+                                <td>{disk.device}</td>
+                                <td>{disk.name}</td>
+                                <td>{disk.type}</td>
+                                <td>{toGB(disk.size)}</td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
             <table>
                 <thead>
                     <tr>
@@ -52,7 +65,7 @@ const MemInfo = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {fsSizeData.map(fsSize => {
+                    {info.fsSize.map(fsSize => {
                         return (
                             <tr key={fsSize.fs}>
                                 <td>{fsSize.fs}</td>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
-import Chart from "react-google-charts";
+// import Chart from "react-google-charts";
 
 const Overview = (props) => {
 

@@ -20,6 +20,10 @@ const cpuTemp = async () => {
     return temp
 }
 
+const cpuLoad = () => {
+    return si.currentLoad()
+}
+
 const mem = () => {
     return si.mem()
 }
@@ -56,10 +60,11 @@ module.exports = {
     cpu,
     cpuSpeed,
     cpuTemp,
+    cpuLoad,
     mem,
     os,
     load,
-    // processes,
+    processes,
     disk,
     fsSize,
     network,
