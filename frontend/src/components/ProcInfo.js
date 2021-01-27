@@ -2,6 +2,9 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
 
+// TODO: implement filter processes
+// TODO: implement favorite processes (persistant -> browser or backend?)
+
 const ProcInfo = (props) => {
     const [info, setInfo] = useState({ processes: {} });
     const [sort, setSort] = useState({ col: 'name', order: 'asc' })

@@ -16,7 +16,7 @@ import MemInfo from './components/MemInfo'
 import ProcInfo from './components/ProcInfo'
 import NetInfo from './components/NetInfo'
 
-axios.defaults.baseURL = process.env.BACKEND_URL || 'http://localhost:3001'
+// axios.defaults.baseURL = process.env.BACKEND_URL || 'http://localhost:3001'
 
 function App() {
 

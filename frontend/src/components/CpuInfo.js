@@ -4,7 +4,7 @@ import infoService from '../services/infoService'
 import Chart from "react-google-charts";
 
 
-// TODO Change speeod to load
+// TODO fix state updating only when mounted -> useEffect to return cleanup function
 
 const CpuInfo = (props) => {
 
