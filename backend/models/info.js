@@ -5,7 +5,9 @@ const cpu = () => {
 }
 
 const cpuSpeed = async () => {
-    // return si.cpuCurrentspeed()
+    if (process.env.NODE_ENV === 'production') {
+        return si.cpuCurrentspeed()
+    }
     const speed = await si.cpuCurrentspeed()
     speed.avg = Math.round(((Math.random() * 50) + 0) * 10) / 10
     console.log('speed:', speed)
@@ -13,7 +15,9 @@ const cpuSpeed = async () => {
 }
 
 const cpuTemp = async () => {
-    // return si.cpuTemperature()
+    if (process.env.NODE_ENV === 'production') {
+        return si.cpuTemperature()
+    }
     const temp = await si.cpuTemperature()
     temp.main = Math.round(((Math.random() * 20) + 60) * 10) / 10
     console.log('temp:', temp)

@@ -12,7 +12,7 @@ const errorHandler = require('./utils/errorHandling/errorHandler')
 // app.use(express.json())
 
 
-app.use(cors())                      // --> middleware to support CORS
+app.use(cors())                         // --> middleware to support CORS
 // app.use(express.static('build'))     // --> add static folder -> for frontend  
 // app.use(middleware.requestLogger)    // --> add logging
 

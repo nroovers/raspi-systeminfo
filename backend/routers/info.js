@@ -3,7 +3,7 @@ const info = require('../models/info')
 
 
 const getFlags = (flag) => {
-    console.log('flage' + flag)
+    console.log('flags', flag)
     if (Array.isArray(flag)) {
         return flag
     }
