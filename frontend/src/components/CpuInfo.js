@@ -83,7 +83,7 @@ const CpuInfo = (props) => {
             <p>speed: {info.cpu?.speed} GHz</p>
             <p>cores: {info.cpu?.cores}</p>
             <p>Current load: {info.cpuLoad.length > 0 ? (info.cpuLoad[info.cpuLoad.length - 1]).toFixed(2) : 0} %</p>
-            <p>Current temperature: {info.cpuTemp.length > 0 ? info.cpuTemp[info.cpuTemp.length - 1] : 0} C</p>
+            <p>Current temperature: {info.cpuTemp.length > 0 ? (info.cpuTemp[info.cpuTemp.length - 1]).toFixed(2) : 0} C</p>
 
             <Chart
                 width={'500px'}

@@ -1,0 +1,14 @@
+[Unit]
+Description=raspi-sysinfo app - service for running the backend in node
+After=network.target
+
+[Service]
+Environment=NODE_PORT=3001
+Environment=NODE_ENV=production
+Type=simple
+User=nobody
+ExecStart=/usr/bin/node /var/www/raspi-systeminfo/backend/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
