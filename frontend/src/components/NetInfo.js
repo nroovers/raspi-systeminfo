@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
+import SortTable from "./SortTable"
 // import Chart from "react-google-charts";
 
 const NetInfo = (props) => {
@@ -25,51 +26,85 @@ const NetInfo = (props) => {
     return (
         <div>
             <h2>Network</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>iface</th>
-                        <th>ip4</th>
-                        <th>ip4subnet</th>
-                        <th>type</th>
-                        <th>dhcp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {info.network.map(netw => {
-                        return (
-                            <tr key={netw.iface}>
-                                <td>{netw.iface}</td>
-                                <td>{netw.ip4}</td>
-                                <td>{netw.ip4subnet}</td>
-                                <td>{netw.type}</td>
-                                <td>{netw.dhcp}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+            <SortTable
+                columns={[
+                    {
+                        header: 'iface',
+                        name: 'iface',
+                        getValue: row => row.iface
+                    },
+                    {
+                        header: 'ip4',
+                        name: 'ip4',
+                        getValue: row => row.ip4
+                    },
+                    {
+                        header: 'ip4subnet',
+                        name: 'ip4subnet',
+                        getValue: row => row.ip4subnet
+                    },
+                    {
+                        header: 'type',
+                        name: 'type',
+                        getValue: row => row.type
+                    },
+                    {
+                        header: 'virtual',
+                        name: 'virtual',
+                        getValue: row => row.virtual.toString()
+                    },
+                    {
+                        header: 'dhcp',
+                        name: 'dhcp',
+                        getValue: row => row.dhcp.toString()
+                    },
+
+                ]}
+                getRowKey={(row) => row.iface}
+                data={info.network}
+                updateDataState={(sortedData) => {
+                    setInfo({
+                        network: sortedData,
+                        wifi: info.wifi,
+                    })
+                }}
+            >
+            </SortTable>
             <h2>WiFi</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ssid</th>
-                        <th>channel</th>
-                        <th>security</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {info.wifi.map(wifi => {
-                        return (
-                            <tr key={wifi.ssid}>
-                                <td>{wifi.ssid}</td>
-                                <td>{wifi.channel}</td>
-                                <td>{wifi.security.join()}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+            <SortTable
+                columns={[
+                    {
+                        header: 'ssid',
+                        name: 'ssid',
+                        getValue: row => row.ssid
+                    },
+                    {
+                        header: 'channel',
+                        name: 'channel',
+                        getValue: row => row.channel
+                    },
+                    {
+                        header: 'frequency',
+                        name: 'frequency',
+                        getValue: row => row.frequency
+                    },
+                    {
+                        header: 'security',
+                        name: 'security',
+                        getValue: row => row.security.join()
+                    },
+
+                ]}
+                getRowKey={(row) => row.ssid}
+                data={info.wifi}
+                updateDataState={(sortedData) => {
+                    setInfo({
+                        network: info.network,
+                        wifi: sortedData,
+                    })
+                }}
+            >
+            </SortTable>
         </div>
     )
 }

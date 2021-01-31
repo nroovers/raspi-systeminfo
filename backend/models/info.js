@@ -10,7 +10,7 @@ const cpuSpeed = async () => {
     }
     const speed = await si.cpuCurrentspeed()
     speed.avg = Math.round(((Math.random() * 50) + 0) * 10) / 10
-    console.log('speed:', speed)
+    // console.log('speed:', speed)
     return speed
 }
 
@@ -20,7 +20,7 @@ const cpuTemp = async () => {
     }
     const temp = await si.cpuTemperature()
     temp.main = Math.round(((Math.random() * 20) + 60) * 10) / 10
-    console.log('temp:', temp)
+    // console.log('temp:', temp)
     return temp
 }
 

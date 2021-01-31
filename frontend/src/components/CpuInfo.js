@@ -92,11 +92,13 @@ const CpuInfo = (props) => {
                 loader={<div>Loading Chart</div>}
                 data={getLoadChartData()}
                 options={{
+                    title: 'CPU Load',
                     hAxis: {},
                     vAxis: {
-                        title: 'Load',
+                        // title: 'Load',
                         viewWindow: { min: 0, max: 100 }
                     },
+                    legend: 'bottom',
                 }}
                 // rootProps={{ 'data-testid': '1' }}
             />
@@ -111,16 +113,18 @@ const CpuInfo = (props) => {
                 // ]}
                 data={getTempChartData()}
                 options={{
+                    title: 'CPU Temperature',
                     hAxis: {
                         // baseline: 20,
                         // color: '#333', 
                         // minSpacing: 20
                     },
                     vAxis: {
-                        title: 'Temperature',
+                        // title: 'Temperature',
                         // color: '#333', minSpacing: 20
                         viewWindow: { min: 40, max: 100 }
                     },
+                    legend: 'bottom',
                 }}
                 // rootProps={{ 'data-testid': '1' }}
             />

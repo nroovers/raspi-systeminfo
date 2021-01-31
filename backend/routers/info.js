@@ -3,7 +3,7 @@ const info = require('../models/info')
 
 
 const getFlags = (flag) => {
-    console.log('flags', flag)
+    // console.log('flags', flag)
     if (Array.isArray(flag)) {
         return flag
     }
@@ -15,7 +15,7 @@ const getFlags = (flag) => {
 
 infoRouter.get('/', async (req, res, next) => {
     try {
-        console.log('getInfo called')
+        // console.log('getInfo called')
         const flags = getFlags(req.query.flag)
         var data = {}
         for (const f of flags) {

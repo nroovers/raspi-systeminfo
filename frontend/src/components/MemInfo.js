@@ -1,5 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import SortTable from "./SortTable"
+
 import infoService from '../services/infoService'
 
 const MemInfo = (props) => {
@@ -21,7 +23,6 @@ const MemInfo = (props) => {
         return () => memInfoMounted = false
     }, []);
 
-
     const toGB = (bytes) => (bytes / (1024 * 1024 * 1024)).toFixed(1)
 
     return (
@@ -31,55 +32,85 @@ const MemInfo = (props) => {
             <p>Used: {(info.mem.used / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
             <p>Free: {(info.mem.free / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
             <h2>Storage</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Device</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Size (GB)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {info.disk.map(disk => {
-                        return (
-                            <tr key={disk.device + disk.name}>
-                                <td>{disk.device}</td>
-                                <td>{disk.name}</td>
-                                <td>{disk.type}</td>
-                                <td>{toGB(disk.size)}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Size (GB)</th>
-                        <th>Free (GB)</th>
-                        <th>Used (GB)</th>
-                        <th>Used (%)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {info.fsSize.map(fsSize => {
-                        return (
-                            <tr key={fsSize.fs}>
-                                <td>{fsSize.fs}</td>
-                                <td>{fsSize.type}</td>
-                                <td>{toGB(fsSize.size)}</td>
-                                <td>{toGB(fsSize.size - fsSize.used)}</td>
-                                <td>{toGB(fsSize.used)}</td>
-                                <td>{(fsSize.use).toFixed(1)}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+            <h3>Disks</h3>
+            <SortTable
+                columns={[
+                    {
+                        header: 'device',
+                        name: 'device',
+                        getValue: row => row.device
+                    },
+                    {
+                        header: 'name',
+                        name: 'name',
+                        getValue: row => row.name
+                    },
+                    {
+                        header: 'type',
+                        name: 'type',
+                        getValue: row => row.type
+                    },
+                    {
+                        header: 'size',
+                        name: 'size',
+                        getValue: row => toGB(row.size)
+                    },
 
+                ]}
+                getRowKey={(row) => row.device + row.name}
+                data={info.disk}
+                updateDataState={(sortedData) => {
+                    setInfo({
+                        ...info,
+                        disk: sortedData,
+                    })
+                }}
+            >
+            </SortTable>
+            <h3>File System Size</h3>
+            <SortTable
+                columns={[
+                    {
+                        header: 'name',
+                        name: 'fs',
+                        getValue: row => row.fs
+                    },
+                    {
+                        header: 'type',
+                        name: 'type',
+                        getValue: row => row.type
+                    },
+                    {
+                        header: 'size (GB)',
+                        name: 'size',
+                        getValue: row => toGB(row.size)
+                    },
+                    {
+                        header: 'free (GB)',
+                        name: 'used',
+                        getValue: row => toGB(row.size - row.used)
+                    },
+                    {
+                        header: 'used (GB)',
+                        name: 'used',
+                        getValue: row => toGB(row.used)
+                    },
+                    {
+                        header: 'use (%)',
+                        name: 'use',
+                        getValue: row => (row.use).toFixed(1)
+                    },
+                ]}
+                getRowKey={row => row.fs}
+                data={info.fsSize}
+                updateDataState={(sortedData) => {
+                    setInfo({
+                        ...info,
+                        fsSize: sortedData,
+                    })
+                }}
+            >
+            </SortTable>
         </div>
     )
 }
