@@ -6,6 +6,7 @@ import { Table } from "react-bootstrap"
 
 const SortTable = (props) => {
     const [sort, setSort] = useState({ col: 'name', order: 'asc' })
+    const [selectedRow, setSelectedRow] = useState('')
 
     const compare = (a, b) => {
         if (a[sort.col] < b[sort.col]) {
@@ -26,6 +27,14 @@ const SortTable = (props) => {
         props.updateDataState(props.data.sort(compare))
     }
 
+
+    const handleRowClicked = (rowKey) => {
+        if (props.renderRowDetails && selectedRow !== rowKey)
+            setSelectedRow(rowKey)
+        else
+            setSelectedRow('')
+    }
+
     return (
         <Table>
             <thead>
@@ -39,11 +48,17 @@ const SortTable = (props) => {
             <tbody>
                 {props.data?.map(row => {
                     return (
-                        <tr key={props.getRowKey(row)}>
-                            {props.columns.map(col =>
-                                (<td key={col.header}>{col.getValue(row)}</td>)
-                            )}
-                        </tr>
+                        <>
+                            <tr key={props.getRowKey(row)} onClick={() => handleRowClicked(props.getRowKey(row))}>
+                                {props.columns.map(col =>
+                                    (<td key={col.header}>{col.getValue(row)}</td>)
+                                )}
+                            </tr>
+                            {props.renderRowDetails && selectedRow === props.getRowKey(row)
+                                ? <tr><td colspan={props.columns.length}>{props.renderRowDetails(row)}</td></tr>
+                                : ''
+                            }
+                        </>
                     )
                 })}
             </tbody>
