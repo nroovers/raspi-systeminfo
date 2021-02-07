@@ -101,7 +101,7 @@ const CpuInfo = (props) => {
             <p>Current temperature: {info.cpuTemp.length > 0 ? (info.cpuTemp[info.cpuTemp.length - 1]).toFixed(2) : 0} C</p> 
             */}
 
-            <Row>
+            <Row xs={1} md={2}>
                 <Col>
                     <Chart
                         width={'500px'}
@@ -144,10 +144,6 @@ const CpuInfo = (props) => {
                     />
                 </Col>
             </Row>
-
-
-
-
         </div>
     )
 }
