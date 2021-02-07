@@ -31,6 +31,14 @@ const CpuInfo = (props) => {
                 // console.log('updatedInfo', info, updatedInfo)
                 setInfo(updatedInfo)
             })
+            .catch(err =>
+                props.setAppState({
+                    ...props.appState,
+                    notifications: props.appState.notifications.concat(
+                        { title: 'Error', body: <><p>Retrieving cpu data failed</p><p>{err.message}</p></>, type: 'danger' }
+                    )
+
+                }))
     }
 
     useEffect(() => {

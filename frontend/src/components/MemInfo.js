@@ -20,6 +20,14 @@ const MemInfo = (props) => {
                         fsSize: data.fsSize,
                     })
             })
+            .catch(err =>
+                props.setAppState({
+                    ...props.appState,
+                    notifications: props.appState.notifications.concat(
+                        { title: 'Error', body: <><p>Retrieving memory & storage data failed</p><p>{err.message}</p></>, type: 'danger' }
+                    )
+
+                }))
         return () => memInfoMounted = false
     }, []);
 

@@ -5,7 +5,6 @@ import SortTable from "./SortTable"
 import { Row, Col } from "react-bootstrap"
 
 // TODO: implement favorite processes (persistant -> browser or backend?)
-// TODO: show more process details when clicking on row
 
 const ProcInfo = (props) => {
     const [info, setInfo] = useState({ processes: {} });
@@ -18,8 +17,15 @@ const ProcInfo = (props) => {
                 console.log('ProcInfo set data', data)
                 if (procInfoMounted) // only set state if mounted
                     setInfo({ processes: data.processes })
-                // setProcessData({ list: data.processes.list.sort(compare), ...data })
             })
+            .catch(err =>
+                props.setAppState({
+                    ...props.appState,
+                    notifications: props.appState.notifications.concat(
+                        { title: 'Error', body: <><p>Retrieving process data failed</p><p>{err.message}</p></>, type: 'danger' }
+                    )
+
+                }))
         // Cleanup function in the useEffect hook to ensure that state is updated (after async call) only when mounted 
         return () => procInfoMounted = false
     }, []);
@@ -88,15 +94,15 @@ const ProcInfo = (props) => {
                         }}
                         renderRowDetails={(row) =>
                             <Row xs={1} md={2}>
-                               <Col><p>pid: {row.pid}</p></Col>
-                               <Col><p>name: {row.name}</p></Col>
-                               <Col><p>state: {row.state}</p></Col>
-                               <Col><p>started: {row.started}</p></Col>
-                               <Col><p>tty: {row.tty}</p></Col>
-                               <Col><p>user: {row.user}</p></Col>
-                               <Col><p>command: {row.command}</p></Col>
-                               <Col><p>params: {row.params}</p></Col>
-                               <Col><p>path: {row.path}</p></Col>
+                                <Col><p>pid: {row.pid}</p></Col>
+                                <Col><p>name: {row.name}</p></Col>
+                                <Col><p>state: {row.state}</p></Col>
+                                <Col><p>started: {row.started}</p></Col>
+                                <Col><p>tty: {row.tty}</p></Col>
+                                <Col><p>user: {row.user}</p></Col>
+                                <Col><p>command: {row.command}</p></Col>
+                                <Col><p>params: {row.params}</p></Col>
+                                <Col><p>path: {row.path}</p></Col>
                             </Row>
                         }
                     >

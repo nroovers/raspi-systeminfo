@@ -1,4 +1,5 @@
 import './App.css'
+import { useState } from 'react'
 
 import {
     BrowserRouter as Router,
@@ -14,8 +15,17 @@ import CpuInfo from './components/CpuInfo'
 import MemInfo from './components/MemInfo'
 import ProcInfo from './components/ProcInfo'
 import NetInfo from './components/NetInfo'
+import Notification from './components/Notification'
 
 function App() {
+
+    const [appState, setAppState] = useState({
+        notifications: [
+            // { title: 'Error', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'danger' },
+            // { title: 'Titles', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'primary' },
+            // { title: 'Titles', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'secondary' }
+        ]
+    })
 
     return (
         <Router>
@@ -23,21 +33,22 @@ function App() {
                 <Header></Header>
             </Container>
             <Container>
+                <Notification appState={appState} setAppState={setAppState}></Notification>
                 <Switch>
                     <Route exact path="/">
-                        <Overview />
+                        <Overview appState={appState} setAppState={setAppState} />
                     </Route>
                     <Route path="/cpu">
-                        <CpuInfo />
+                        <CpuInfo appState={appState} setAppState={setAppState} />
                     </Route>
                     <Route path="/mem">
-                        <MemInfo />
+                        <MemInfo appState={appState} setAppState={setAppState} />
                     </Route>
                     <Route path="/proc">
-                        <ProcInfo />
+                        <ProcInfo appState={appState} setAppState={setAppState} />
                     </Route>
                     <Route path="/net">
-                        <NetInfo />
+                        <NetInfo appState={appState} setAppState={setAppState} />
                     </Route>
 
                     {/*  TODO -> check if this works
