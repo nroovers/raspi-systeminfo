@@ -88,6 +88,9 @@ const ProcInfo = (props) => {
                         }}
                         renderRowDetails={(row) =>
                             <Row xs={1} md={2}>
+                               <Col><p>pid: {row.pid}</p></Col>
+                               <Col><p>name: {row.name}</p></Col>
+                               <Col><p>state: {row.state}</p></Col>
                                <Col><p>started: {row.started}</p></Col>
                                <Col><p>tty: {row.tty}</p></Col>
                                <Col><p>user: {row.user}</p></Col>

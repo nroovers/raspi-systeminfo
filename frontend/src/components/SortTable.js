@@ -27,12 +27,25 @@ const SortTable = (props) => {
         props.updateDataState(props.data.sort(compare))
     }
 
-
     const handleRowClicked = (rowKey) => {
         if (props.renderRowDetails && selectedRow !== rowKey)
             setSelectedRow(rowKey)
         else
             setSelectedRow('')
+    }
+
+    const renderTr = (row) => {
+        return <tr key={props.getRowKey(row)} onClick={() => handleRowClicked(props.getRowKey(row))}>
+            {props.columns.map(col =>
+                (<td key={col.header}>{col.getValue(row)}</td>)
+            )}
+        </tr>
+    }
+
+    const renderTrDetails = (row) => {
+        return <tr key={props.getRowKey(row) + '2'}>
+            <td colSpan={props.columns.length}>{props.renderRowDetails(row)}</td>
+        </tr>
     }
 
     return (
@@ -47,22 +60,15 @@ const SortTable = (props) => {
             </thead>
             <tbody>
                 {props.data?.map(row => {
-                    return (
-                        <>
-                            <tr key={props.getRowKey(row)} onClick={() => handleRowClicked(props.getRowKey(row))}>
-                                {props.columns.map(col =>
-                                    (<td key={col.header}>{col.getValue(row)}</td>)
-                                )}
-                            </tr>
-                            {props.renderRowDetails && selectedRow === props.getRowKey(row)
-                                ? <tr><td colspan={props.columns.length}>{props.renderRowDetails(row)}</td></tr>
-                                : ''
-                            }
-                        </>
-                    )
+                    return <tr key={props.getRowKey(row)} onClick={() => handleRowClicked(props.getRowKey(row))}>
+                        {props.renderRowDetails && selectedRow === props.getRowKey(row)
+                            ? <td colSpan={props.columns.length}>{props.renderRowDetails(row)}</td>
+                            : props.columns.map(col => <td key={col.header}>{col.getValue(row)}</td>)
+                        }
+                    </tr>
                 })}
             </tbody>
-        </Table>
+        </Table >
     )
 }
 
