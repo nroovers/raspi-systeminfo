@@ -1,4 +1,4 @@
-import './App.css';
+import './App.css'
 
 import {
     BrowserRouter as Router,
@@ -18,9 +18,11 @@ import NetInfo from './components/NetInfo'
 function App() {
 
     return (
-        <Container>
-            <Router>
+        <Router>
+            <Container>
                 <Header></Header>
+            </Container>
+            <Container>
                 <Switch>
                     <Route exact path="/">
                         <Overview />
@@ -43,8 +45,8 @@ function App() {
                             404 Page not found
                         </Route> */}
                 </Switch>
-            </Router>
-        </Container>
+            </Container>
+        </Router>
     );
 }
 

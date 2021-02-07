@@ -33,17 +33,17 @@ $ sudo systemctl daemon-reload
 To launch the service:
 
 ```
-$ sudo systemctl start raspi_sysinfo
+$ sudo systemctl start raspi-sysinfo
 ```
 
 To see the status of the service and all console output:
 
 ```
-$ sudo systemctl status raspi_sysinfo
+$ sudo systemctl status raspi-sysinfo
 ```
 
 To enable the service to start at system start-up or after reboot:
 
 ```
-$ sudo systemtl enable raspi_sysinfo
+$ sudo systemtl enable raspi-sysinfo
 ```

@@ -56,6 +56,10 @@ const network = () => {
     return si.networkInterfaces()
 }
 
+const networkStats = () => {
+    return si.networkStats()
+}
+
 const wifi = () => {
     return si.wifiNetworks()
 }
@@ -72,6 +76,7 @@ module.exports = {
     disk,
     fsSize,
     network,
+    networkStats,
     wifi
 }
 

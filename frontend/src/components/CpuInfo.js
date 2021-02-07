@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
 import Chart from "react-google-charts";
+import { Row, Col } from "react-bootstrap"
 
 
 // TODO fix state updating only when mounted -> useEffect to return cleanup function
@@ -13,7 +14,6 @@ const CpuInfo = (props) => {
     // const [refreshInterval, setRefreshInterval] = useState(10000);
 
     const [info, setInfo] = useState({ cpu: {}, cpuLoad: [], cpuTemp: [] })
-
 
     const fetchMetrics = () => {
         // retrieve and then setData()
@@ -30,37 +30,19 @@ const CpuInfo = (props) => {
                 }
                 // console.log('updatedInfo', info, updatedInfo)
                 setInfo(updatedInfo)
-                // console.log('--->', tempData)
             })
-    }
-
-    const getTempChartData = () => {
-        var i = 0
-        var data = [['x', 'temp']]
-        for (i = 0; i < maxGraphIntervals; i++) {
-            data = data.concat([[i, (i < info.cpuTemp.length ? info.cpuTemp[info.cpuTemp.length - i] : 0)]])
-        }
-        return data
-    }
-
-    const getLoadChartData = () => {
-        var i = 0
-        var data = [['x', 'load']]
-        for (i = 0; i < maxGraphIntervals; i++) {
-            data = data.concat([[i, (i < info.cpuLoad.length ? info.cpuLoad[info.cpuLoad.length - i] : 0)]])
-        }
-        return data
     }
 
     useEffect(() => {
         console.log('useeffect CPU')
-        // if (!info.cpu) {
-            infoService.getInfo(['cpu'])
-                .then(data => {
-                    console.log('CPU data')//, data)
+        var cpuInfoMounted = true
+        infoService.getInfo(['cpu'])
+            .then(data => {
+                console.log('CPU data')//, data)
+                if (cpuInfoMounted)
                     setInfo({ ...info, cpu: data.cpu })
-                })
-        // }
+            })
+        return () => cpuInfoMounted = false
     }, [])
     // }, [info.cpu]);
 
@@ -73,61 +55,90 @@ const CpuInfo = (props) => {
         // }, [refreshInterval]);
     });
 
+    const getChartData = (label, infoData) => {
+        console.log('infodata', infoData)
 
+        var i = 0
+        var chartData = [['x', label]]
+        for (i = 0; i < maxGraphIntervals; i++) {
+            chartData = chartData.concat([[i, (i < infoData.length ? infoData[infoData.length - i - 1] : 0)]])
+        }
+        return chartData
+    }
+
+    // console.log('info.cpuLoad', getChartData('load', info.cpuLoad))
     return (
         <div>
-            <h2>CPU</h2>
+            <Row>
+                <Col></Col>
+            </Row>
+            <Row>
+                <Col><h2>CPU</h2></Col>
+            </Row>
+            <Row xs={1} md={2}>
+                <Col>Manufacturer: {info.cpu?.manufacturer}</Col>
+                <Col>Speed: {info.cpu?.speed} GHz</Col>
+                <Col>Brand: {info.cpu?.brand}</Col>
+                <Col>Current load: {info.cpuLoad.length > 0 ? (info.cpuLoad[info.cpuLoad.length - 1]).toFixed(2) : 0} %</Col>
+                <Col>Cores: {info.cpu?.cores}</Col>
+                <Col>Current temperature: {info.cpuTemp.length > 0 ? (info.cpuTemp[info.cpuTemp.length - 1]).toFixed(2) : 0} C</Col>
+            </Row>
 
+            {/* 
             <p>manufacturer: {info.cpu?.manufacturer}</p>
             <p>brand: {info.cpu?.brand}</p>
             <p>speed: {info.cpu?.speed} GHz</p>
             <p>cores: {info.cpu?.cores}</p>
             <p>Current load: {info.cpuLoad.length > 0 ? (info.cpuLoad[info.cpuLoad.length - 1]).toFixed(2) : 0} %</p>
-            <p>Current temperature: {info.cpuTemp.length > 0 ? (info.cpuTemp[info.cpuTemp.length - 1]).toFixed(2) : 0} C</p>
+            <p>Current temperature: {info.cpuTemp.length > 0 ? (info.cpuTemp[info.cpuTemp.length - 1]).toFixed(2) : 0} C</p> 
+            */}
 
-            <Chart
-                width={'500px'}
-                height={'300px'}
-                chartType="LineChart"
-                loader={<div>Loading Chart</div>}
-                data={getLoadChartData()}
-                options={{
-                    title: 'CPU Load',
-                    hAxis: {},
-                    vAxis: {
-                        // title: 'Load',
-                        viewWindow: { min: 0, max: 100 }
-                    },
-                    legend: 'bottom',
-                }}
-                // rootProps={{ 'data-testid': '1' }}
-            />
+            <Row>
+                <Col>
+                    <Chart
+                        width={'500px'}
+                        height={'300px'}
+                        chartType="LineChart"
+                        loader={<div>Loading Chart</div>}
+                        data={getChartData('load', info.cpuLoad)}
+                        options={{
+                            title: 'CPU Load',
+                            hAxis: {},
+                            vAxis: {
+                                // title: 'Load',
+                                viewWindow: { min: 0, max: 100 }
+                            },
+                            legend: 'bottom',
+                        }}
+                    />
+                </Col>
+                <Col>
+                    <Chart
+                        width={'500px'}
+                        height={'300px'}
+                        chartType="LineChart"
+                        loader={<div>Loading Chart</div>}
+                        data={getChartData('temp', info.cpuTemp)}
+                        options={{
+                            title: 'CPU Temperature',
+                            hAxis: {
+                                // baseline: 20,
+                                // color: '#333', 
+                                // minSpacing: 20
+                            },
+                            vAxis: {
+                                // title: 'Temperature',
+                                // color: '#333', minSpacing: 20
+                                viewWindow: { min: 40, max: 100 }
+                            },
+                            legend: 'bottom',
+                        }}
+                    />
+                </Col>
+            </Row>
 
-            <Chart
-                width={'500px'}
-                height={'300px'}
-                chartType="LineChart"
-                loader={<div>Loading Chart</div>}
-                // data={[
-                //     // ['x', 'temp'],
-                // ]}
-                data={getTempChartData()}
-                options={{
-                    title: 'CPU Temperature',
-                    hAxis: {
-                        // baseline: 20,
-                        // color: '#333', 
-                        // minSpacing: 20
-                    },
-                    vAxis: {
-                        // title: 'Temperature',
-                        // color: '#333', minSpacing: 20
-                        viewWindow: { min: 40, max: 100 }
-                    },
-                    legend: 'bottom',
-                }}
-                // rootProps={{ 'data-testid': '1' }}
-            />
+
+
 
         </div>
     )

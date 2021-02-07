@@ -9,7 +9,7 @@ const MemInfo = (props) => {
 
     useEffect(() => {
         console.log('useeffect Load')
-        let memInfoMounted = true
+        var memInfoMounted = true
         infoService.getInfo(['mem', 'disk', 'fsSize'])
             .then(data => {
                 console.log('set data', data)
@@ -31,8 +31,7 @@ const MemInfo = (props) => {
             <p>Total: {(info.mem.total / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
             <p>Used: {(info.mem.used / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
             <p>Free: {(info.mem.free / (1024 * 1024 * 1024)).toFixed(1)} GB</p>
-            <h2>Storage</h2>
-            <h3>Disks</h3>
+            <h2>Disks</h2>
             <SortTable
                 columns={[
                     {
@@ -67,7 +66,7 @@ const MemInfo = (props) => {
                 }}
             >
             </SortTable>
-            <h3>File System Size</h3>
+            <h2>File System Size</h2>
             <SortTable
                 columns={[
                     {

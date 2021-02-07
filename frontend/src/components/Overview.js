@@ -23,9 +23,9 @@ const Overview = (props) => {
 
     return (
         <div>
-            <h2>Overview</h2>
+            {/* <h2>Overview</h2> */}
 
-            <h3>Operating System</h3>
+            <h2>Operating System</h2>
 
             <p>Platform: {info.os.platform}</p>
             <p>Distro: {info.os.distro}</p>
@@ -34,7 +34,7 @@ const Overview = (props) => {
             <p>Arch: {info.os.arch}</p>
             <p></p>
 
-            <h3>Network</h3>
+            <h2>Network</h2>
 
             <p>Fixed IP: {info.network.find(net => net.type === "wired" && !net.virtual)?.ip4}</p>
             <p>Wifi IP: {info.network.find(net => net.type === "wireless" && !net.virtual)?.ip4}</p>
