@@ -1,17 +1,11 @@
 import React from 'react'
 import { Alert } from "react-bootstrap"
+import appStateUtils from '../utils/appStateUtils'
 
 const Notification = (props) => {
 
     const handleOnClose = (i) => {
-        console.log('remove item at index ', i)
-        console.log(props.appState.notifications)
-        const notifs = props.appState.notifications.filter((n, j) => i !== j)
-        console.log(notifs)
-        props.setAppState({
-            ...props.appState,
-            notifications: notifs
-        })
+        appStateUtils.removeNotification(props.appState, props.setAppState, i)
     }
 
     return (

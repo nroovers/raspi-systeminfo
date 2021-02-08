@@ -3,9 +3,14 @@ import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
 import SortTable from "./SortTable"
 // import Chart from "react-google-charts";
+import appStateUtils from '../utils/appStateUtils'
 
 const NetInfo = (props) => {
     const [info, setInfo] = useState({ network: [], wifi: [] });
+
+    useEffect(() => {
+        appStateUtils.setLoading(props.appState, props.setAppState, true)
+    }, [])
 
     useEffect(() => {
         console.log('NetInfo useeffect Load')
@@ -19,15 +24,16 @@ const NetInfo = (props) => {
                         wifi: data.wifi,
                     })
                 }
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
-            .catch(err =>
-                props.setAppState({
-                    ...props.appState,
-                    notifications: props.appState.notifications.concat(
-                        { title: 'Error', body: <><p>Retrieving network data failed</p><p>{err.message}</p></>, type: 'danger' }
-                    )
+            .catch(err => {
+                appStateUtils.addNotification(
+                    props.appState,
+                    props.setAppState,
+                    { title: 'Error', body: <><p>Retrieving network data failed</p><p>{err.message}</p></>, type: 'danger' })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
+            })
 
-                }))
         return () => netInfoMounted = false
     }, []);
 

@@ -3,12 +3,10 @@ import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
 import Chart from "react-google-charts";
 import { Row, Col } from "react-bootstrap"
+import appStateUtils from '../utils/appStateUtils'
 
-
-// TODO fix state updating only when mounted -> useEffect to return cleanup function
 
 const CpuInfo = (props) => {
-
     const maxGraphIntervals = 25
     const refreshInterval = 5000;
     // const [refreshInterval, setRefreshInterval] = useState(10000);
@@ -31,24 +29,28 @@ const CpuInfo = (props) => {
                 // console.log('updatedInfo', info, updatedInfo)
                 setInfo(updatedInfo)
             })
-            .catch(err =>
-                props.setAppState({
-                    ...props.appState,
-                    notifications: props.appState.notifications.concat(
-                        { title: 'Error', body: <><p>Retrieving cpu data failed</p><p>{err.message}</p></>, type: 'danger' }
-                    )
-
-                }))
     }
+
+    useEffect(() => {
+        appStateUtils.setLoading(props.appState, props.setAppState, true)
+    }, [])
 
     useEffect(() => {
         console.log('useeffect CPU')
         var cpuInfoMounted = true
         infoService.getInfo(['cpu'])
             .then(data => {
-                console.log('CPU data')//, data)
+                console.log('CPU data')
                 if (cpuInfoMounted)
                     setInfo({ ...info, cpu: data.cpu })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
+            })
+            .catch(err => {
+                appStateUtils.addNotification(
+                    props.appState,
+                    props.setAppState,
+                    { title: 'Error', body: <><p>Retrieving cpu data failed</p><p>{err.message}</p></>, type: 'danger' })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
         return () => cpuInfoMounted = false
     }, [])
@@ -65,7 +67,6 @@ const CpuInfo = (props) => {
 
     const getChartData = (label, infoData) => {
         console.log('infodata', infoData)
-
         var i = 0
         var chartData = [['x', label]]
         for (i = 0; i < maxGraphIntervals; i++) {
@@ -74,7 +75,6 @@ const CpuInfo = (props) => {
         return chartData
     }
 
-    // console.log('info.cpuLoad', getChartData('load', info.cpuLoad))
     return (
         <div>
             <Row>
@@ -87,11 +87,10 @@ const CpuInfo = (props) => {
                 <Col>Manufacturer: {info.cpu?.manufacturer}</Col>
                 <Col>Speed: {info.cpu?.speed} GHz</Col>
                 <Col>Brand: {info.cpu?.brand}</Col>
-                <Col>Current load: {info.cpuLoad.length > 0 ? (info.cpuLoad[info.cpuLoad.length - 1]).toFixed(2) : 0} %</Col>
                 <Col>Cores: {info.cpu?.cores}</Col>
+                <Col>Current load: {info.cpuLoad.length > 0 ? (info.cpuLoad[info.cpuLoad.length - 1]).toFixed(2) : 0} %</Col>
                 <Col>Current temperature: {info.cpuTemp.length > 0 ? (info.cpuTemp[info.cpuTemp.length - 1]).toFixed(2) : 0} C</Col>
             </Row>
-
             {/* 
             <p>manufacturer: {info.cpu?.manufacturer}</p>
             <p>brand: {info.cpu?.brand}</p>
@@ -100,7 +99,6 @@ const CpuInfo = (props) => {
             <p>Current load: {info.cpuLoad.length > 0 ? (info.cpuLoad[info.cpuLoad.length - 1]).toFixed(2) : 0} %</p>
             <p>Current temperature: {info.cpuTemp.length > 0 ? (info.cpuTemp[info.cpuTemp.length - 1]).toFixed(2) : 0} C</p> 
             */}
-
             <Row xs={1} md={2}>
                 <Col>
                     <Chart

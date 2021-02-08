@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { Table } from "react-bootstrap"
 
 // TODO: implement filter columns
@@ -34,22 +34,8 @@ const SortTable = (props) => {
             setSelectedRow('')
     }
 
-    const renderTr = (row) => {
-        return <tr key={props.getRowKey(row)} onClick={() => handleRowClicked(props.getRowKey(row))}>
-            {props.columns.map(col =>
-                (<td key={col.header}>{col.getValue(row)}</td>)
-            )}
-        </tr>
-    }
-
-    const renderTrDetails = (row) => {
-        return <tr key={props.getRowKey(row) + '2'}>
-            <td colSpan={props.columns.length}>{props.renderRowDetails(row)}</td>
-        </tr>
-    }
-
     return (
-        <Table>
+        <Table bordered hover >
             <thead>
                 <tr>
                     {props.columns.map(col =>
@@ -60,12 +46,24 @@ const SortTable = (props) => {
             </thead>
             <tbody>
                 {props.data?.map(row => {
-                    return <tr key={props.getRowKey(row)} onClick={() => handleRowClicked(props.getRowKey(row))}>
+                    // return <tr key={props.getRowKey(row)} onClick={() => handleRowClicked(props.getRowKey(row))}>
+                    //     {props.renderRowDetails && selectedRow === props.getRowKey(row)
+                    //         ? <td colSpan={props.columns.length}>{props.renderRowDetails(row)}</td>
+                    //         : props.columns.map(col => <td key={col.header}>{col.getValue(row)}</td>)
+                    //     }
+                    // </tr>
+
+                    return <Fragment key={props.getRowKey(row)}>
+                        <tr onClick={() => handleRowClicked(props.getRowKey(row))}>
+                            {props.columns.map(col => <td key={col.header}>{col.getValue(row)}</td>)}
+                        </tr>
                         {props.renderRowDetails && selectedRow === props.getRowKey(row)
-                            ? <td colSpan={props.columns.length}>{props.renderRowDetails(row)}</td>
-                            : props.columns.map(col => <td key={col.header}>{col.getValue(row)}</td>)
-                        }
-                    </tr>
+                            ? <tr onClick={() => handleRowClicked(props.getRowKey(row))}>
+                                <td colSpan={props.columns.length}>{props.renderRowDetails(row)}</td>
+
+                            </tr>
+                            : null}
+                    </Fragment>
                 })}
             </tbody>
         </Table >

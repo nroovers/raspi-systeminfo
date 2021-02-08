@@ -3,11 +3,16 @@ import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
 import SortTable from "./SortTable"
 import { Row, Col } from "react-bootstrap"
+import appStateUtils from '../utils/appStateUtils'
 
 // TODO: implement favorite processes (persistant -> browser or backend?)
 
 const ProcInfo = (props) => {
     const [info, setInfo] = useState({ processes: {} });
+
+    useEffect(() => {
+        appStateUtils.setLoading(props.appState, props.setAppState, true)
+    }, [])
 
     useEffect(() => {
         console.log('ProcInfo useeffect Load')
@@ -17,15 +22,15 @@ const ProcInfo = (props) => {
                 console.log('ProcInfo set data', data)
                 if (procInfoMounted) // only set state if mounted
                     setInfo({ processes: data.processes })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
-            .catch(err =>
-                props.setAppState({
-                    ...props.appState,
-                    notifications: props.appState.notifications.concat(
-                        { title: 'Error', body: <><p>Retrieving process data failed</p><p>{err.message}</p></>, type: 'danger' }
-                    )
-
-                }))
+            .catch(err => {
+                appStateUtils.addNotification(
+                    props.appState,
+                    props.setAppState,
+                    { title: 'Error', body: <><p>Retrieving process data failed</p><p>{err.message}</p></>, type: 'danger' })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
+            })
         // Cleanup function in the useEffect hook to ensure that state is updated (after async call) only when mounted 
         return () => procInfoMounted = false
     }, []);
@@ -94,9 +99,6 @@ const ProcInfo = (props) => {
                         }}
                         renderRowDetails={(row) =>
                             <Row xs={1} md={2}>
-                                <Col><p>pid: {row.pid}</p></Col>
-                                <Col><p>name: {row.name}</p></Col>
-                                <Col><p>state: {row.state}</p></Col>
                                 <Col><p>started: {row.started}</p></Col>
                                 <Col><p>tty: {row.tty}</p></Col>
                                 <Col><p>user: {row.user}</p></Col>

@@ -2,9 +2,14 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import infoService from '../services/infoService'
 // import Chart from "react-google-charts";
+import appStateUtils from '../utils/appStateUtils'
 
 const Overview = (props) => {
     const [info, setInfo] = useState({ os: {}, network: [] });
+
+    useEffect(() => {
+        appStateUtils.setLoading(props.appState, props.setAppState, true)
+    }, [])
 
     useEffect(() => {
         console.log('useeffect Load')
@@ -17,6 +22,14 @@ const Overview = (props) => {
                         os: data.os,
                         network: data.network,
                     })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
+            })
+            .catch(err => {
+                appStateUtils.addNotification(
+                    props.appState,
+                    props.setAppState,
+                    { title: 'Error', body: <><p>Retrieving system data failed</p><p>{err.message}</p></>, type: 'danger' })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
         return () => memInfoMounted = false
     }, []);

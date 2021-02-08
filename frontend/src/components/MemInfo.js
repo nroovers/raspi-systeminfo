@@ -1,11 +1,16 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import SortTable from "./SortTable"
+import appStateUtils from '../utils/appStateUtils'
 
 import infoService from '../services/infoService'
 
 const MemInfo = (props) => {
     const [info, setInfo] = useState({ mem: {}, disk: [], fsSize: [] });
+
+    useEffect(() => {
+        appStateUtils.setLoading(props.appState, props.setAppState, true)
+    }, [])
 
     useEffect(() => {
         console.log('useeffect Load')
@@ -19,15 +24,15 @@ const MemInfo = (props) => {
                         disk: data.disk,
                         fsSize: data.fsSize,
                     })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
-            .catch(err =>
-                props.setAppState({
-                    ...props.appState,
-                    notifications: props.appState.notifications.concat(
-                        { title: 'Error', body: <><p>Retrieving memory & storage data failed</p><p>{err.message}</p></>, type: 'danger' }
-                    )
-
-                }))
+            .catch(err => {
+                appStateUtils.addNotification(
+                    props.appState,
+                    props.setAppState,
+                    { title: 'Error', body: <><p>Retrieving memory & storage data failed</p><p>{err.message}</p></>, type: 'danger' })
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
+            })
         return () => memInfoMounted = false
     }, []);
 

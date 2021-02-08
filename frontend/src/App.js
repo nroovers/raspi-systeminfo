@@ -16,16 +16,13 @@ import MemInfo from './components/MemInfo'
 import ProcInfo from './components/ProcInfo'
 import NetInfo from './components/NetInfo'
 import Notification from './components/Notification'
+import Loading from './components/Loading'
+
+import appStateUtils from './utils/appStateUtils'
 
 function App() {
 
-    const [appState, setAppState] = useState({
-        notifications: [
-            // { title: 'Error', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'danger' },
-            // { title: 'Titles', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'primary' },
-            // { title: 'Titles', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'secondary' }
-        ]
-    })
+    const [appState, setAppState] = useState(appStateUtils.initialState)
 
     return (
         <Router>
@@ -34,6 +31,7 @@ function App() {
             </Container>
             <Container>
                 <Notification appState={appState} setAppState={setAppState}></Notification>
+                <Loading appState={appState} setAppState={setAppState}></Loading>
                 <Switch>
                     <Route exact path="/">
                         <Overview appState={appState} setAppState={setAppState} />
