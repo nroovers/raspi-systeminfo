@@ -22,15 +22,16 @@ const ProcInfo = (props) => {
                 console.log('ProcInfo set data', data)
                 if (procInfoMounted) // only set state if mounted
                     setInfo({ processes: data.processes })
-                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
             .catch(err => {
                 appStateUtils.addNotification(
                     props.appState,
                     props.setAppState,
                     { title: 'Error', body: <><p>Retrieving process data failed</p><p>{err.message}</p></>, type: 'danger' })
-                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
+            .finally(() =>
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
+            )
         // Cleanup function in the useEffect hook to ensure that state is updated (after async call) only when mounted 
         return () => procInfoMounted = false
     }, []);

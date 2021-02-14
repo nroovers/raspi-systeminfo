@@ -43,15 +43,16 @@ const CpuInfo = (props) => {
                 console.log('CPU data')
                 if (cpuInfoMounted)
                     setInfo({ ...info, cpu: data.cpu })
-                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
             .catch(err => {
                 appStateUtils.addNotification(
                     props.appState,
                     props.setAppState,
                     { title: 'Error', body: <><p>Retrieving cpu data failed</p><p>{err.message}</p></>, type: 'danger' })
-                appStateUtils.setLoading(props.appState, props.setAppState, false)
             })
+            .finally(() =>
+                appStateUtils.setLoading(props.appState, props.setAppState, false)
+            )
         return () => cpuInfoMounted = false
     }, [])
     // }, [info.cpu]);
