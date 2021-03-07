@@ -33,7 +33,7 @@ const CpuInfo = (props) => {
 
     useEffect(() => {
         appStateUtils.setLoading(props.appState, props.setAppState, true)
-    }, [])
+    }, [props.appState.selectedNode])
 
     useEffect(() => {
         console.log('useeffect CPU')
@@ -54,7 +54,7 @@ const CpuInfo = (props) => {
                 appStateUtils.setLoading(props.appState, props.setAppState, false)
             )
         return () => cpuInfoMounted = false
-    }, [])
+    }, [props.appState.selectedNode])
     // }, [info.cpu]);
 
     useEffect(() => {
