@@ -2,7 +2,7 @@ const config = {
     nodes: [
         {
             name: 'Raspberry Pi',
-            apiUrlPref: '/api'
+            apiUrlPref: '/api-raspi'
         },
         {
             name: 'Synology Nas',
