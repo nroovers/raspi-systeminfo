@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from "react-bootstrap"
+import { Alert } from "react-bootstrap" //https://react-bootstrap.github.io/components/alerts/
 import appStateUtils from '../utils/appStateUtils'
 
 const Notification = (props) => {

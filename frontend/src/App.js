@@ -19,15 +19,18 @@ import Notification from './components/Notification'
 import Loading from './components/Loading'
 
 import appStateUtils from './utils/appStateUtils'
+import infoService from './services/infoService'
 
 function App() {
 
     const [appState, setAppState] = useState(appStateUtils.initialState)
 
+    infoService.setNode(appStateUtils.getSelectedNode(appState))
+
     return (
         <Router>
             <Container>
-                <Header></Header>
+                <Header appState={appState} setAppState={setAppState}></Header>
             </Container>
             <Container>
                 <Notification appState={appState} setAppState={setAppState}></Notification>

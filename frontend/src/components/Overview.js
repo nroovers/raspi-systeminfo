@@ -9,7 +9,7 @@ const Overview = (props) => {
 
     useEffect(() => {
         appStateUtils.setLoading(props.appState, props.setAppState, true)
-    }, [])
+    }, [props.appState.selectedNode])
 
     useEffect(() => {
         console.log('useeffect Load')
@@ -33,7 +33,7 @@ const Overview = (props) => {
                 appStateUtils.setLoading(props.appState, props.setAppState, false)
             )
         return () => memInfoMounted = false
-    }, []);
+    }, [props.appState.selectedNode]);
 
     return (
         <div>

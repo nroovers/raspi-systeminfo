@@ -10,7 +10,7 @@ const MemInfo = (props) => {
 
     useEffect(() => {
         appStateUtils.setLoading(props.appState, props.setAppState, true)
-    }, [])
+    }, [props.appState.selectedNode])
 
     useEffect(() => {
         console.log('useeffect Load')
@@ -35,7 +35,7 @@ const MemInfo = (props) => {
                 appStateUtils.setLoading(props.appState, props.setAppState, false)
             )
         return () => memInfoMounted = false
-    }, []);
+    }, [props.appState.selectedNode]);
 
     const toGB = (bytes) => (bytes / (1024 * 1024 * 1024)).toFixed(1)
 

@@ -1,3 +1,5 @@
+import config from '../config/config'
+
 
 // TODO replace by Redux or other state management framework?
 
@@ -7,7 +9,8 @@ const initialState = {
         // { title: 'Titles', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'primary' },
         // { title: 'Titles', body: <p>kdsahfkashdfkaj falkj fdakjh dfalkshd fal</p>, type: 'secondary' }
     ],
-    loading: false
+    loading: false,
+    selectedNode: config.nodes[0]
 }
 
 const addNotification = (appState, setAppState, notification) => {
@@ -37,10 +40,26 @@ const setLoading = (appState, setAppState, loadingState) => {
     })
 }
 
-export default {
+const getSelectedNode = (appState) => {
+    return appState.selectedNode
+}
+
+const setSelectedNode = (appState, setAppState, node) => {
+    // console.log('setTaoding', loadingState)
+    setAppState({
+        ...appState,
+        selectedNode: node
+    })
+}
+
+const appStateUtils = {
     initialState,
     addNotification,
     removeNotification,
     isLoading,
     setLoading,
+    getSelectedNode,
+    setSelectedNode,
 }
+
+export default appStateUtils

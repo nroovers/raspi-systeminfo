@@ -12,7 +12,7 @@ const ProcInfo = (props) => {
 
     useEffect(() => {
         appStateUtils.setLoading(props.appState, props.setAppState, true)
-    }, [])
+    }, [props.appState.selectedNode])
 
     useEffect(() => {
         console.log('ProcInfo useeffect Load')
@@ -34,7 +34,7 @@ const ProcInfo = (props) => {
             )
         // Cleanup function in the useEffect hook to ensure that state is updated (after async call) only when mounted 
         return () => procInfoMounted = false
-    }, []);
+    }, [props.appState.selectedNode]);
 
     return (
         <div>
