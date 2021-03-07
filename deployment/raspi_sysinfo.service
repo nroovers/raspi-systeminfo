@@ -7,7 +7,7 @@ Environment=NODE_PORT=3001
 Environment=NODE_ENV=production
 Type=simple
 User=nobody
-ExecStart=/usr/bin/node /var/www/raspi-systeminfo/backend/index.js
+ExecStart=/usr/bin/node /var/www/raspi-systeminfo/raspi-systeminfo-backend/index.js
 Restart=on-failure
 
 [Install]
