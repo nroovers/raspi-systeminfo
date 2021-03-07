@@ -1,0 +1,3 @@
+[submodule "raspi-systeminfo-backend"]
+	path = raspi-systeminfo-backend
+	url = https://github.com/nroovers/raspi-systeminfo-backend.git
